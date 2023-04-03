@@ -2,8 +2,8 @@ package entity
 
 import "time"
 
-type admin struct {
-	ID        uint      `gorm:"primarykey"`
+type Admin struct {
+	ID        uint      `gorm:"primarykey" binding:"required"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Username  string    `json:"username" binding:"required" gorm:"unique"`
