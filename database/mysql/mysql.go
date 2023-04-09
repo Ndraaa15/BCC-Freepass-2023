@@ -15,7 +15,7 @@ type DB struct {
 	*gorm.DB
 }
 
-func Init() (*DB, error) {
+func InitMySQL() (*DB, error) {
 	//Pemanggilan method initDatabase untuk mendapatkan koneksi database dan dimasukkan ke dalam struct DB
 	db, err := InitDatabase()
 	if err != nil {
