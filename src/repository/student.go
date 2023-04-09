@@ -17,10 +17,10 @@ type Student struct {
 }
 
 func InitStudent(db sql.DB, supabase supabasestorageuploader.SupabaseClientService) StudentInterface {
-	student := Student{}
-	student.db = db
-	student.supabase = supabase
-	return &student
+	return &Student{
+		db:       db,
+		supabase: supabase,
+	}
 }
 
 func (r *Student) CreateStudent() {
