@@ -1,11 +1,8 @@
 # BCC-Freepass-2023
-This repository contains the results of program implementation for challenges provided by the BCC community.  
-This repository is also used to study clean architectures, injection dependencies, and others
 
-Source challenge : 
+- This repository contains the results of program implementation for challenges provided by the BCC community.  
+- This repository is also used to study clean architectures, injection dependencies, and others
 
-https://github.com/bccfilkom-be/freepass-2023
+## Source challenge
 
-Entity Relational Diagram : 
-
-https://dbdiagram.io/d/642ae4d65758ac5f17265945
+- [Freepass BE BCC 2023](https://github.com/bccfilkom-be/freepass-2023)
