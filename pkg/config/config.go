@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"log"
@@ -6,10 +6,9 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
-	//laad all env variables
+func LoadConfig() error {
 	if err := godotenv.Load(); err != nil {
-		log.Panic(err)
+		log.Fatalf("Error loading .env file")
 	}
-
+	return nil
 }

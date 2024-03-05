@@ -1,6 +1,6 @@
 package usecase
 
-import "bcc-freepass-2023/src/repository"
+import "bcc-freepass-2023/internal/repository"
 
 //Struct Usecase berfungsi untuk menyimpan interface (berisi function) dari dari setiap entitiy yang ada
 type Usecase struct {

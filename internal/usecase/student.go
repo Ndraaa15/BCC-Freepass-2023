@@ -1,6 +1,6 @@
 package usecase
 
-import "bcc-freepass-2023/src/repository"
+import "bcc-freepass-2023/internal/repository"
 
 /*
 Dalam bahasa Go, sebuah tipe struct dapat dianggap sebagai sebuah implementasi
