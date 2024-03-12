@@ -36,7 +36,6 @@ func (l *Logger) RequestLogger() fiber.Handler {
 			"uri":       c.OriginalURL(),
 			"userAgent": c.Context().UserAgent(),
 		}).Info("Request")
-		c.Next()
-		return nil
+		return c.Next()
 	}
 }

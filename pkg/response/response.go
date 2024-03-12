@@ -24,13 +24,13 @@ func Success(c *fiber.Ctx, code int, message string, data any) error {
 	}, fiber.MIMEApplicationJSON)
 }
 
-func Failed(c *fiber.Ctx, code int, message string, err error) error {
+func Failed(c *fiber.Ctx, code int, message string, err any) error {
 	return c.JSON(&Response{
 		Status: Status{
 			IsSuccess: false,
 			Code:      code,
 		},
 		Message: message,
-		Data:    err.Error(),
+		Data:    err,
 	}, fiber.MIMEApplicationJSON)
 }

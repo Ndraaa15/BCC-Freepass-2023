@@ -1,0 +1,12 @@
+CREATE TABLE users (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid() ,
+  email VARCHAR(255) NOT NULL UNIQUE ,
+  hashed_password VARCHAR(255) NOT NULL,
+  major VARCHAR(255) NOT NULL,
+  faculty VARCHAR(36) NOT NULL,
+  total_sks INT,
+  role_id VARCHAR(36) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
