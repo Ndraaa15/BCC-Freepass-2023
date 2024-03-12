@@ -1,6 +1,8 @@
 package rest
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 type Rest struct {
 	fiber fiber.Router

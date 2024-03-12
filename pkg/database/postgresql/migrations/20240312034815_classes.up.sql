@@ -1,7 +1,10 @@
-CREATE TABLE courses (
+CREATE TABLE classes (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
-  sks INT NOT NULL,
+  course_id uuid NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+  lecture VARCHAR(255) NOT NULL,
+  time_start TIME NOT NULL,
+  time_end TIME NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
