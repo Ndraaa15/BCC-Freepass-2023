@@ -2,49 +2,60 @@
 // versions:
 //   sqlc v1.25.0
 
-package postgresql
+package repository
 
 import (
-	"database/sql"
-	"time"
-
-	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Class struct {
-	ID        uuid.UUID
-	Name      string
-	CourseID  uuid.UUID
-	Lecture   string
-	TimeStart time.Time
-	TimeEnd   time.Time
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID           pgtype.UUID
+	Name         string
+	CodeClass    string
+	TotalStudent pgtype.Int4
+	Lecturer     string
+	CourseID     pgtype.UUID
+	TimeStart    pgtype.Time
+	TimeEnd      pgtype.Time
+	CreatedAt    pgtype.Timestamp
+	UpdatedAt    pgtype.Timestamp
 }
 
 type Course struct {
-	ID        uuid.UUID
+	ID        pgtype.UUID
 	Name      string
 	Sks       int32
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
 }
 
 type Role struct {
 	ID        int32
 	Name      string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
 }
 
 type User struct {
-	ID             uuid.UUID
+	ID             pgtype.UUID
 	Email          string
 	HashedPassword string
+	FullName       string
+	Nim            string
 	Major          string
 	Faculty        string
-	TotalSks       sql.NullInt32
+	TotalSks       pgtype.Int4
+	Semester       int32
+	Contact        string
 	RoleID         string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	CreatedAt      pgtype.Timestamp
+	UpdatedAt      pgtype.Timestamp
+}
+
+type UserClass struct {
+	ID        int32
+	UserID    pgtype.UUID
+	ClassID   pgtype.UUID
+	CreatedAt pgtype.Timestamp
+	UpdatedAt pgtype.Timestamp
 }

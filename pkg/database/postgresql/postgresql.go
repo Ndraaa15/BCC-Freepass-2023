@@ -1,4 +1,4 @@
-package mongodb
+package postgresql
 
 import (
 	"bcc-freepass-2023/pkg/config"
@@ -7,14 +7,14 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func InitPostgreSQL() error {
+func InitPostgreSQL() (*pgx.Conn, error) {
 	ctx := context.Background()
 
-	conn, err := pgx.Connect(ctx, config.LoadConfigPostgresql())
+	dbConn, err := pgx.Connect(ctx, config.LoadConfigPostgresql())
 	if err != nil {
-		return err
+		return nil, err
 	}
-	defer conn.Close(ctx)
+	defer dbConn.Close(ctx)
 
-	return nil
+	return dbConn, nil
 }
