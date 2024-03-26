@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type InterfaceLogger interface {
+type ILogger interface {
 	RequestLogger() fiber.Handler
 }
 
@@ -15,7 +15,7 @@ type Logger struct {
 	logger *logrus.Logger
 }
 
-func NewLog() InterfaceLogger {
+func NewLogger() ILogger {
 	newLogger := logrus.New()
 	newLogger.SetFormatter(&logrus.TextFormatter{
 		ForceColors:   true,
