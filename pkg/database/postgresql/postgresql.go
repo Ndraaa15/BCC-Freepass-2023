@@ -14,7 +14,6 @@ func InitPostgreSQL() (*pgx.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer dbConn.Close(ctx)
 
 	return dbConn, nil
 }

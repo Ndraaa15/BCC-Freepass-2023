@@ -1,4 +1,4 @@
-package errcustom
+package error
 
 type CustomError struct {
 	Code     int

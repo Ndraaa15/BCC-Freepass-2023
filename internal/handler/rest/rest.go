@@ -7,6 +7,7 @@ import (
 	"bcc-freepass-2023/pkg/database/postgresql"
 	errcustom "bcc-freepass-2023/pkg/error"
 	logcustom "bcc-freepass-2023/pkg/log"
+	"bcc-freepass-2023/pkg/validation"
 	"fmt"
 	"net/http"
 	"os"
@@ -59,9 +60,11 @@ func (r *Rest) newServer() error {
 		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : init postgresql", err)
 	}
 
+	validator := validation.NewValidator()
+
 	repository := repository.New(dbConn)
 	studentUsecase := usecase.NewStudentUsecase(repository)
-	studentHandler := NewStudentHandler(studentUsecase, r.logger)
+	studentHandler := NewStudentHandler(studentUsecase, r.logger, validator)
 
 	r.registerHandler(studentHandler.Identity, studentHandler)
 

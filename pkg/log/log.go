@@ -33,10 +33,9 @@ func NewLogger() ILogger {
 func (l *Logger) RequestLogger() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		l.logger.WithFields(logrus.Fields{
-			"ip":        c.IP(),
-			"method":    c.Method(),
-			"uri":       c.OriginalURL(),
-			"userAgent": c.Context().UserAgent(),
+			"ip":     c.IP(),
+			"method": c.Method(),
+			"uri":    c.OriginalURL(),
 		}).Info("Request")
 		return c.Next()
 	}
