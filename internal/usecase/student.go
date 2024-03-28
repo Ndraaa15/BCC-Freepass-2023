@@ -28,7 +28,7 @@ func NewStudentUsecase(studentQuerier *repository.Queries) IStudentUsecase {
 func (s *StudentUsecase) CreateStudent(ctx context.Context, request model.StudentRegister) (uuid.UUID, error) {
 	hashedPassword, err := bcrypt.HashPassword(request.Password)
 	if err != nil {
-		return uuid.Nil, errcustom.NewCustomError(http.StatusBadRequest, "[CreateStudent] : hashing password", err)
+		return uuid.Nil, errcustom.NewCustomError(http.StatusBadRequest, "[CreateStudent] : hashing password", "failed hashing user password", err)
 	}
 
 	inserUserParam := repository.InsertUserParams{
@@ -45,7 +45,7 @@ func (s *StudentUsecase) CreateStudent(ctx context.Context, request model.Studen
 
 	id, err := s.studentQuerier.InsertUser(ctx, inserUserParam)
 	if err != nil {
-		return uuid.Nil, errcustom.NewCustomError(http.StatusInternalServerError, "[CreateStudent] : insert user into database", err)
+		return uuid.Nil, errcustom.NewCustomError(http.StatusInternalServerError, "[CreateStudent] : insert user into database", "Failed insert user into database", err)
 	}
 
 	return uuid.UUID(id.Bytes), nil
