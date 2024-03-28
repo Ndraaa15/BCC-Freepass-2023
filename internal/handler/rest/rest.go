@@ -5,8 +5,10 @@ import (
 	"bcc-freepass-2023/internal/usecase"
 	"bcc-freepass-2023/pkg/config"
 	"bcc-freepass-2023/pkg/database/postgresql"
-	"bcc-freepass-2023/pkg/log"
+	errcustom "bcc-freepass-2023/pkg/error"
+	logcustom "bcc-freepass-2023/pkg/log"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,13 +21,13 @@ const (
 )
 
 type Handler interface {
-	MountEndpoint(fiber fiber.Router, logger log.ILogger)
+	MountEndpoint(fiber fiber.Router)
 }
 
 type Rest struct {
 	fiber    *fiber.App
 	handlers map[string]Handler
-	logger   log.ILogger
+	logger   logcustom.ILogger
 }
 
 func InitializeServer() *Rest {
@@ -38,7 +40,8 @@ func InitializeServer() *Rest {
 		},
 	)
 	rest.handlers = make(map[string]Handler)
-	rest.logger = log.NewLogger()
+	rest.logger = logcustom.NewLogger()
+
 	return &rest
 }
 
@@ -48,17 +51,18 @@ func (r *Rest) registerHandler(name string, handler Handler) {
 
 func (r *Rest) newServer() error {
 	if err := config.LoadConfig(); err != nil {
-		return err
+		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : load config", err)
 	}
 
 	dbConn, err := postgresql.InitPostgreSQL()
 	if err != nil {
-		return err
+		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : init postgresql", err)
 	}
 
 	repository := repository.New(dbConn)
 	studentUsecase := usecase.NewStudentUsecase(repository)
-	studentHandler := NewStudentHandler(studentUsecase)
+	studentHandler := NewStudentHandler(studentUsecase, r.logger)
+
 	r.registerHandler(studentHandler.Identity, studentHandler)
 
 	return nil
@@ -69,16 +73,16 @@ func (r *Rest) RunServer() (int, error) {
 		return BadConfig, err
 	}
 
-	for key, handler := range r.handlers {
+	for key := range r.handlers {
 		routerGroup := r.fiber.Group(fmt.Sprintf("%s/%s/%s", "api", "v1", key))
-		handler.MountEndpoint(routerGroup, r.logger)
+		r.handlers[key].MountEndpoint(routerGroup)
 	}
 
 	addr := os.Getenv("ADDRESS")
 	port := os.Getenv("PORT")
 
 	if err := r.fiber.Listen(fmt.Sprintf("%s:%s", addr, port)); err != nil {
-		return FailedRunServer, err
+		return FailedRunServer, errcustom.NewCustomError(http.StatusInternalServerError, "[RunServer] : listen address and port", err)
 	}
 
 	return Success, nil

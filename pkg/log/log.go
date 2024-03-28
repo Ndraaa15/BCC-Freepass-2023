@@ -1,6 +1,7 @@
-package log
+package logcustom
 
 import (
+	custom_error "bcc-freepass-2023/pkg/error"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -9,6 +10,7 @@ import (
 
 type ILogger interface {
 	RequestLogger() fiber.Handler
+	ErrorLogger(err custom_error.CustomError)
 }
 
 type Logger struct {
@@ -38,4 +40,12 @@ func (l *Logger) RequestLogger() fiber.Handler {
 		}).Info("Request")
 		return c.Next()
 	}
+}
+
+func (l *Logger) ErrorLogger(err custom_error.CustomError) {
+	l.logger.WithFields(logrus.Fields{
+		"code":     err.Code,
+		"location": err.Location,
+		"error":    err.Err,
+	}).Error("Process")
 }

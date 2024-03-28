@@ -47,7 +47,7 @@ type User struct {
 	TotalSks       pgtype.Int4
 	Semester       int32
 	Contact        string
-	RoleID         string
+	RoleID         int32
 	CreatedAt      pgtype.Timestamp
 	UpdatedAt      pgtype.Timestamp
 }

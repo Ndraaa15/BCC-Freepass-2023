@@ -44,7 +44,7 @@ type InsertUserParams struct {
 	Faculty        string
 	Semester       int32
 	Contact        string
-	RoleID         string
+	RoleID         int32
 }
 
 func (q *Queries) InsertUser(ctx context.Context, arg InsertUserParams) (pgtype.UUID, error) {
