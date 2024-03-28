@@ -3,13 +3,11 @@ package rest
 import (
 	"bcc-freepass-2023/internal/usecase"
 	"bcc-freepass-2023/model"
-	errcustom "bcc-freepass-2023/pkg/error"
 	logcustom "bcc-freepass-2023/pkg/log"
 	"bcc-freepass-2023/pkg/response"
 	"bcc-freepass-2023/pkg/validation"
 
 	"context"
-	"errors"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -41,21 +39,17 @@ func (h *StudentHandler) StudentRegister(c *fiber.Ctx) error {
 
 	req := model.StudentRegister{}
 	if err := c.BodyParser(&req); err != nil {
-		return response.Failed(c, fiber.StatusUnprocessableEntity, "Invalid request", err)
+		return err
 	}
 
 	if err := h.validator.ValidateStruct(req); err != nil {
-		return response.Failed(c, fiber.StatusBadRequest, "Invalid request", err)
+		return err
 	}
 
 	resp, err := h.studentUsecase.CreateStudent(ctx, req)
-	var customErr *errcustom.CustomError
 	if err != nil {
-		if errors.As(err, &customErr) {
-			h.logger.ErrorLogger(*customErr)
-			return response.Failed(c, customErr.Code, "Failed Create User", err)
-		}
+		return err
 	}
 
-	return response.Success(c, fiber.StatusOK, "Success", resp)
+	return response.Success(c, fiber.StatusCreated, "Success", resp)
 }

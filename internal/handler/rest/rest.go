@@ -33,13 +33,7 @@ type Rest struct {
 
 func InitializeServer() *Rest {
 	var rest Rest
-	rest.fiber = fiber.New(
-		fiber.Config{
-			EnablePrintRoutes: true,
-			CaseSensitive:     true,
-			StrictRouting:     true,
-		},
-	)
+	rest.fiber = config.NewFiber()
 	rest.handlers = make(map[string]Handler)
 	rest.logger = logcustom.NewLogger()
 
@@ -52,12 +46,12 @@ func (r *Rest) registerHandler(name string, handler Handler) {
 
 func (r *Rest) newServer() error {
 	if err := config.LoadConfig(); err != nil {
-		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : load config", err)
+		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : load config", "failed to load config", err)
 	}
 
 	dbConn, err := postgresql.InitPostgreSQL()
 	if err != nil {
-		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : init postgresql", err)
+		return errcustom.NewCustomError(http.StatusInternalServerError, "[newServer] : init postgresql", "failed to initialize postgresql", err)
 	}
 
 	validator := validation.NewValidator()
@@ -85,7 +79,7 @@ func (r *Rest) RunServer() (int, error) {
 	port := os.Getenv("PORT")
 
 	if err := r.fiber.Listen(fmt.Sprintf("%s:%s", addr, port)); err != nil {
-		return FailedRunServer, errcustom.NewCustomError(http.StatusInternalServerError, "[RunServer] : listen address and port", err)
+		return FailedRunServer, errcustom.NewCustomError(http.StatusInternalServerError, "[RunServer] : listen address and port", "failed to run server", err)
 	}
 
 	return Success, nil
