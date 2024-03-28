@@ -11,6 +11,56 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const findUserByEmail = `-- name: FindUserByEmail :one
+SELECT u.id, 
+u.email, 
+u.hashed_password,
+u.full_name,
+u.nim,
+u.major,
+u.faculty,
+u.total_sks,
+u.semester,
+u.contact,
+r.name as role_name
+FROM users u 
+JOIN roles r ON u.role_id = r.id 
+WHERE email = $1
+`
+
+type FindUserByEmailRow struct {
+	ID             pgtype.UUID
+	Email          string
+	HashedPassword string
+	FullName       string
+	Nim            string
+	Major          string
+	Faculty        string
+	TotalSks       pgtype.Int4
+	Semester       int32
+	Contact        string
+	RoleName       string
+}
+
+func (q *Queries) FindUserByEmail(ctx context.Context, email string) (FindUserByEmailRow, error) {
+	row := q.db.QueryRow(ctx, findUserByEmail, email)
+	var i FindUserByEmailRow
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.HashedPassword,
+		&i.FullName,
+		&i.Nim,
+		&i.Major,
+		&i.Faculty,
+		&i.TotalSks,
+		&i.Semester,
+		&i.Contact,
+		&i.RoleName,
+	)
+	return i, err
+}
+
 const insertUser = `-- name: InsertUser :one
 INSERT INTO users (
     email,
